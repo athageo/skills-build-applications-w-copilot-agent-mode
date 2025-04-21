@@ -1,45 +1,42 @@
 from django.core.management.base import BaseCommand
-from pymongo import MongoClient
-from django.conf import settings
+from octofit_tracker.models import User, Team, Activity, Leaderboard, Workout
+from octofit_tracker.test_data import test_users, test_teams, test_activities, test_leaderboard, test_workouts
 
 class Command(BaseCommand):
     help = 'Populate the database with test data'
 
     def handle(self, *args, **kwargs):
-        # Extract database settings
-        db_settings = settings.DATABASES['default']
-        client = MongoClient(db_settings['HOST'], db_settings['PORT'])
-        db = client[db_settings['NAME']]
+        # Populate users
+        for user_data in test_users:
+            user, created = User.objects.get_or_create(**user_data)
+            if created:
+                self.stdout.write(self.style.SUCCESS(f'User created: {user.username}'))
 
-        # Clear existing data
-        db.users.delete_many({})
-        db.teams.delete_many({})
-        db.activity.delete_many({})
-        db.leaderboard.delete_many({})
-        db.workouts.delete_many({})
+        # Populate teams
+        for team_data in test_teams:
+            members = team_data.pop('members')
+            team, created = Team.objects.get_or_create(**team_data)
+            if created:
+                team.members.set(User.objects.filter(username__in=members))
+                team.save()
+                self.stdout.write(self.style.SUCCESS(f'Team created: {team.name}'))
 
-        # Create test users
-        user1 = {"username": "hero1", "email": "hero1@example.com", "password": "password1"}
-        user2 = {"username": "hero2", "email": "hero2@example.com", "password": "password2"}
-        db.users.insert_many([user1, user2])
+        # Populate activities
+        for activity_data in test_activities:
+            user = User.objects.get(username=activity_data.pop('user'))
+            activity, created = Activity.objects.get_or_create(user=user, **activity_data)
+            if created:
+                self.stdout.write(self.style.SUCCESS(f'Activity created: {activity.activity_type} for {user.username}'))
 
-        # Create test teams
-        team1 = {"name": "Avengers", "members": [user1["email"], user2["email"]]}
-        db.teams.insert_one(team1)
+        # Populate leaderboard
+        for leaderboard_data in test_leaderboard:
+            user = User.objects.get(username=leaderboard_data.pop('user'))
+            leaderboard, created = Leaderboard.objects.get_or_create(user=user, **leaderboard_data)
+            if created:
+                self.stdout.write(self.style.SUCCESS(f'Leaderboard entry created for {user.username}'))
 
-        # Create test activities
-        activity1 = {"user": user1["email"], "activity_type": "Running", "duration": "00:30:00"}
-        activity2 = {"user": user2["email"], "activity_type": "Cycling", "duration": "01:00:00"}
-        db.activity.insert_many([activity1, activity2])
-
-        # Create test leaderboard entries
-        leaderboard1 = {"user": user1["email"], "score": 100}
-        leaderboard2 = {"user": user2["email"], "score": 200}
-        db.leaderboard.insert_many([leaderboard1, leaderboard2])
-
-        # Create test workouts
-        workout1 = {"name": "Push-ups", "description": "Do 20 push-ups"}
-        workout2 = {"name": "Sit-ups", "description": "Do 30 sit-ups"}
-        db.workouts.insert_many([workout1, workout2])
-
-        self.stdout.write(self.style.SUCCESS('Database populated with test data'))
+        # Populate workouts
+        for workout_data in test_workouts:
+            workout, created = Workout.objects.get_or_create(**workout_data)
+            if created:
+                self.stdout.write(self.style.SUCCESS(f'Workout created: {workout.name}'))

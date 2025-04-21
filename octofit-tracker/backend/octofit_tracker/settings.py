@@ -71,7 +71,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "octofit_tracker.wsgi.application"
 
 
-# Database
+# Database configuration for MongoDB
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
@@ -81,26 +81,21 @@ DATABASES = {
     }
 }
 
-# CORS settings
+# Installed apps
 INSTALLED_APPS += [
+    'rest_framework',
+    'djongo',
     'corsheaders',
+    'octofit_tracker',
 ]
 
-MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
+# Middleware for CORS
+MIDDLEWARE += [
+    'corsheaders.middleware.CorsMiddleware',
+]
 
+# Allow all origins for CORS
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-    'PUT',
-    'PATCH',
-    'DELETE',
-    'OPTIONS',
-]
-CORS_ALLOW_HEADERS = [
-    'content-type',
-    'authorization',
-]
 
 # Allow all hosts
 ALLOWED_HOSTS = ['*']
