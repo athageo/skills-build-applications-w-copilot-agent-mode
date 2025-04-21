@@ -6,8 +6,10 @@ class Command(BaseCommand):
     help = 'Populate the database with test data'
 
     def handle(self, *args, **kwargs):
-        client = MongoClient(settings.MONGO_HOST, settings.MONGO_PORT)
-        db = client[settings.MONGO_DB_NAME]
+        # Extract database settings
+        db_settings = settings.DATABASES['default']
+        client = MongoClient(db_settings['HOST'], db_settings['PORT'])
+        db = client[db_settings['NAME']]
 
         # Clear existing data
         db.users.delete_many({})

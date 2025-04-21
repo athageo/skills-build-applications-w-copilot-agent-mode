@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -76,9 +77,9 @@ WSGI_APPLICATION = "octofit_tracker.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'octofit_db',
-        'HOST': 'localhost',
-        'PORT': 27017,
+        'NAME': os.getenv('MONGO_DB_NAME', 'octofit_db'),
+        'HOST': os.getenv('MONGO_HOST', 'localhost'),
+        'PORT': int(os.getenv('MONGO_PORT', 27017)),
     }
 }
 
