@@ -24,20 +24,15 @@ class Command(BaseCommand):
 
         # Populate activities
         for activity_data in test_activities:
-            user = User.objects.get(username=activity_data.pop('user'))
-            duration_str = activity_data.pop('duration')
-            hours, minutes, seconds = map(int, duration_str.split(':'))
-            activity_data['duration'] = timedelta(hours=hours, minutes=minutes, seconds=seconds)
-            activity, created = Activity.objects.get_or_create(user=user, **activity_data)
+            activity, created = Activity.objects.get_or_create(**activity_data)
             if created:
-                self.stdout.write(self.style.SUCCESS(f'Activity created: {activity.activity_type} for {user.username}'))
+                self.stdout.write(self.style.SUCCESS(f'Activity created: {activity.activity_type} for user {activity.user.username}'))
 
         # Populate leaderboard
         for leaderboard_data in test_leaderboard:
-            user = User.objects.get(username=leaderboard_data.pop('user'))
-            leaderboard, created = Leaderboard.objects.get_or_create(user=user, **leaderboard_data)
+            leaderboard, created = Leaderboard.objects.get_or_create(**leaderboard_data)
             if created:
-                self.stdout.write(self.style.SUCCESS(f'Leaderboard entry created for {user.username}'))
+                self.stdout.write(self.style.SUCCESS(f'Leaderboard entry created for user {leaderboard.user.username} with score {leaderboard.score}'))
 
         # Populate workouts
         for workout_data in test_workouts:

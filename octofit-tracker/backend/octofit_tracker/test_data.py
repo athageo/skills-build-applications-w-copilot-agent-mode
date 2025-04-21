@@ -1,30 +1,39 @@
-# Test data for populating the octofit_db database
+from datetime import timedelta
+from bson import ObjectId
 
 test_users = [
-    {"username": "john_doe", "email": "john@example.com", "password": "password123"},
-    {"username": "jane_smith", "email": "jane@example.com", "password": "password123"},
-    {"username": "alice_wonder", "email": "alice@example.com", "password": "password123"},
+    {"_id": ObjectId(), "username": "thundergod", "email": "thundergod@mhigh.edu", "password": "thundergodpassword"},
+    {"_id": ObjectId(), "username": "metalgeek", "email": "metalgeek@mhigh.edu", "password": "metalgeekpassword"},
+    {"_id": ObjectId(), "username": "zerocool", "email": "zerocool@mhigh.edu", "password": "zerocoolpassword"},
+    {"_id": ObjectId(), "username": "crashoverride", "email": "crashoverride@mhigh.edu", "password": "crashoverridepassword"},
+    {"_id": ObjectId(), "username": "sleeptoken", "email": "sleeptoken@mhigh.edu", "password": "sleeptokenpassword"},
 ]
 
 test_teams = [
-    {"name": "Team Alpha", "members": ["john_doe", "jane_smith"]},
-    {"name": "Team Beta", "members": ["alice_wonder"]},
+    {"_id": ObjectId(), "name": "Blue Team", "members": [user["_id"] for user in test_users]},
+    {"_id": ObjectId(), "name": "Gold Team", "members": [user["_id"] for user in test_users]},
 ]
 
 test_activities = [
-    {"user": "john_doe", "activity_type": "Running", "duration": "00:30:00"},
-    {"user": "jane_smith", "activity_type": "Cycling", "duration": "01:00:00"},
-    {"user": "alice_wonder", "activity_type": "Swimming", "duration": "00:45:00"},
+    {"_id": ObjectId(), "user": test_users[0]["_id"], "activity_type": "Cycling", "duration": timedelta(hours=1)},
+    {"_id": ObjectId(), "user": test_users[1]["_id"], "activity_type": "Crossfit", "duration": timedelta(hours=2)},
+    {"_id": ObjectId(), "user": test_users[2]["_id"], "activity_type": "Running", "duration": timedelta(hours=1, minutes=30)},
+    {"_id": ObjectId(), "user": test_users[3]["_id"], "activity_type": "Strength", "duration": timedelta(minutes=30)},
+    {"_id": ObjectId(), "user": test_users[4]["_id"], "activity_type": "Swimming", "duration": timedelta(hours=1, minutes=15)},
 ]
 
 test_leaderboard = [
-    {"user": "john_doe", "score": 150},
-    {"user": "jane_smith", "score": 200},
-    {"user": "alice_wonder", "score": 180},
+    {"_id": ObjectId(), "user": test_users[0]["_id"], "score": 100},
+    {"_id": ObjectId(), "user": test_users[1]["_id"], "score": 90},
+    {"_id": ObjectId(), "user": test_users[2]["_id"], "score": 95},
+    {"_id": ObjectId(), "user": test_users[3]["_id"], "score": 85},
+    {"_id": ObjectId(), "user": test_users[4]["_id"], "score": 80},
 ]
 
 test_workouts = [
-    {"name": "Push-ups", "description": "Do 20 push-ups"},
-    {"name": "Sit-ups", "description": "Do 30 sit-ups"},
-    {"name": "Plank", "description": "Hold a plank for 1 minute"},
+    {"_id": ObjectId(), "name": "Cycling Training", "description": "Training for a road cycling event"},
+    {"_id": ObjectId(), "name": "Crossfit", "description": "Training for a crossfit competition"},
+    {"_id": ObjectId(), "name": "Running Training", "description": "Training for a marathon"},
+    {"_id": ObjectId(), "name": "Strength Training", "description": "Training for strength"},
+    {"_id": ObjectId(), "name": "Swimming Training", "description": "Training for a swimming competition"},
 ]
