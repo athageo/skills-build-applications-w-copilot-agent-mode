@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from octofit_tracker.models import User, Team, Activity, Leaderboard, Workout
 from octofit_tracker.test_data import test_users, test_teams, test_activities, test_leaderboard, test_workouts
+from datetime import timedelta
 
 class Command(BaseCommand):
     help = 'Populate the database with test data'
@@ -17,13 +18,16 @@ class Command(BaseCommand):
             members = team_data.pop('members')
             team, created = Team.objects.get_or_create(**team_data)
             if created:
-                team.members.set(User.objects.filter(username__in=members))
+                team.members = list(User.objects.filter(username__in=members))
                 team.save()
                 self.stdout.write(self.style.SUCCESS(f'Team created: {team.name}'))
 
         # Populate activities
         for activity_data in test_activities:
             user = User.objects.get(username=activity_data.pop('user'))
+            duration_str = activity_data.pop('duration')
+            hours, minutes, seconds = map(int, duration_str.split(':'))
+            activity_data['duration'] = timedelta(hours=hours, minutes=minutes, seconds=seconds)
             activity, created = Activity.objects.get_or_create(user=user, **activity_data)
             if created:
                 self.stdout.write(self.style.SUCCESS(f'Activity created: {activity.activity_type} for {user.username}'))
