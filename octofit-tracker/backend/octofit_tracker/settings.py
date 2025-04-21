@@ -72,16 +72,38 @@ WSGI_APPLICATION = "octofit_tracker.wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': os.getenv('MONGO_DB_NAME', 'octofit_db'),
-        'HOST': os.getenv('MONGO_HOST', 'localhost'),
-        'PORT': int(os.getenv('MONGO_PORT', 27017)),
+        'NAME': 'octofit_db',
+        'HOST': 'localhost',
+        'PORT': 27017,
     }
 }
+
+# CORS settings
+INSTALLED_APPS += [
+    'corsheaders',
+]
+
+MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+]
+
+# Allow all hosts
+ALLOWED_HOSTS = ['*']
 
 
 # Password validation
