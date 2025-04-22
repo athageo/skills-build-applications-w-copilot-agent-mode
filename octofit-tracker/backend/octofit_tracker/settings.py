@@ -101,6 +101,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
 
 
+# Add the codespace Django REST API endpoint suffix
+CODESPACE_URL = "https://urban-space-giggle-pjrv9x6w7w59h7666-8000.app.github.dev"
+LOCALHOST_URL = "http://localhost:8000"
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
