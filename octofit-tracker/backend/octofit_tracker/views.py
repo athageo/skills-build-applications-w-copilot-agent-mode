@@ -9,7 +9,12 @@ def api_root(request, format=None):
     if request.method == 'POST':
         return Response({"message": "POST request received"}, status=status.HTTP_201_CREATED)
 
-    base_url = '[USE CODESPACE URL]'
+    base_url = request.build_absolute_uri('/')
+    if 'urban-space-giggle-pjrv9x6w7w59h7666-8000.app.github.dev' in base_url:
+        base_url = 'https://urban-space-giggle-pjrv9x6w7w59h7666-8000.app.github.dev/'
+    else:
+        base_url = 'http://localhost:8000/'
+
     return Response({
         'users': base_url + 'api/users/?format=api',
         'workouts': base_url + 'api/workouts/?format=api'
